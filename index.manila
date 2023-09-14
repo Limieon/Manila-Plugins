@@ -1,0 +1,11 @@
+{
+	"name": "Official Manila Plugin Repository",
+	"repo": "https://github.com/Limieon/Manila-Plugins",
+	"plugins": {
+		"manilacpp": {
+			"name": "Manila C/C++ Plugin",
+			"description": "Clang Support for Manila",
+			"version": "1.0.0"
+		}
+	}
+}

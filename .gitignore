@@ -1,0 +1,5 @@
+# Ignore Other Plugins
+
+# Ignore Binary Folders
+**/bin/
+**/obj/
