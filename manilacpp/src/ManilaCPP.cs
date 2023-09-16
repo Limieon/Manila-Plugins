@@ -6,16 +6,17 @@ using ManilaCPP.Clang;
 
 namespace ManilaCPP;
 
-public class ManilaCPP: Plugin {
+public class ManilaCPP : Plugin {
 	public static ManilaCPP instance { get; private set; }
 
-	public ManilaCPP(): base("manilacpp") {
+	public ManilaCPP() : base("manilacpp") {
 		instance = this;
 	}
 
 	public override void init() {
 		debug("Initializing...");
 		addType(typeof(Clang.Clang));
+		setBuildConfig(new ClangBuildConfig());
 	}
 	public override void shutdown() {
 		debug("Shutting down...");

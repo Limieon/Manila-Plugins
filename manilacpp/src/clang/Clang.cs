@@ -1,4 +1,6 @@
 
+using System.Diagnostics;
+using ClangSharp.Interop;
 using Manila.Plugin.API;
 
 namespace ManilaCPP.Clang;
