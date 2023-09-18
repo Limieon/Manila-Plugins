@@ -21,8 +21,8 @@ public static class Clang {
 
 	internal static Results compile(Flags flags, Project project, Workspace workspace) {
 		ManilaCPP.instance.info("Compiling", flags.name + "...");
+		ManilaCPP.instance.debug("BinDir:", flags.binDir.getPath());
 		ManilaCPP.instance.debug("ObjDir:", flags.objDir.getPath());
-		ManilaCPP.instance.debug("BinDir:", flags.objDir.getPath());
 
 		var clang = new ClangCompiler("clang");
 		foreach (var f in flags.files) {

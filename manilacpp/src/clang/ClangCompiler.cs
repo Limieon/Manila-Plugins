@@ -23,7 +23,7 @@ internal class ClangCompiler {
 	}
 
 	internal ManilaFile compileToObj(ManilaFile src, API.Clang.Flags flags, Project project, Workspace workspace) {
-		var objFile = new ManilaFile(flags.objDir, project.location.getPathRelative(src.getPath()));
+		var objFile = new ManilaFile(flags.objDir, src.getPathRelative(project.location.getPath())).setExtension("obj");
 		ManilaCPP.instance.debug("OBJFile:", objFile.getPath());
 
 		return objFile;
