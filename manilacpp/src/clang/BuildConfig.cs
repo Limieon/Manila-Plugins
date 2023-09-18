@@ -3,7 +3,7 @@ using Manila.Core;
 
 namespace ManilaCPP.Clang;
 
-public class ClangBuildConfig : Manila.Core.BuildConfig {
+public class ClangBuildConfig : BuildConfig {
 	public enum Architecture {
 		x86,
 		x64
@@ -16,7 +16,6 @@ public class ClangBuildConfig : Manila.Core.BuildConfig {
 
 	public string config;
 	public Architecture arch;
-	public string abc;
 
 	public ClangBuildConfig() : base() { }
 }
