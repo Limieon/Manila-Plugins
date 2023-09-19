@@ -15,6 +15,13 @@ public static class Clang {
 		public ManilaFile[] files { get; set; }
 	}
 	public class Results {
+		public Results(ManilaFile binary) {
+			this.binary = binary;
+			success = true;
+		}
+
+		public readonly bool success;
+		public readonly ManilaFile binary;
 	}
 
 	internal static Flags flags() { return new Flags(); }
@@ -29,8 +36,9 @@ public static class Clang {
 			ManilaCPP.instance.info(f.getFileName());
 			clang.compileToObj(f, flags, project, workspace);
 		}
+		var linkerResults = clang.link(null, flags, project, workspace);
 
-		var results = new Results();
+		var results = new Results(linkerResults.binary);
 		return results;
 	}
 }

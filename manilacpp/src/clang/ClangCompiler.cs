@@ -10,12 +10,24 @@ namespace ManilaCPP.Clang;
 
 internal class ClangCompiler {
 	public class CompileResults {
-		internal CompileResults(ManilaFile objFile, bool success) {
+		public CompileResults(ManilaFile objFile, bool success) {
 			this.objFile = objFile;
 			this.success = success;
 		}
 
 		public readonly ManilaFile objFile;
+		public readonly bool success;
+	}
+	public class LinkerResults {
+		public LinkerResults() {
+			success = false;
+		}
+		public LinkerResults(ManilaFile binary) {
+			this.binary = binary;
+			success = true;
+		}
+
+		public readonly ManilaFile binary;
 		public readonly bool success;
 	}
 
@@ -27,5 +39,11 @@ internal class ClangCompiler {
 		ManilaCPP.instance.debug("OBJFile:", objFile.getPath());
 
 		return objFile;
+	}
+	internal LinkerResults link(ManilaFile[] objFiles, API.Clang.Flags flags, Project project, Workspace workspace) {
+		var binaryFile = new ManilaFile(flags.binDir, flags.name);
+		ManilaCPP.instance.debug("Binary File:", binaryFile.getPath());
+
+		return new LinkerResults(binaryFile);
 	}
 }
