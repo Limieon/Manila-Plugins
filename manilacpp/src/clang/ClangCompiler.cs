@@ -8,9 +8,9 @@ using Manila.Utils;
 
 namespace ManilaCPP.Clang;
 
-internal class ClangCompiler {
-	public class CompileResults {
-		public CompileResults(ManilaFile objFile, bool success) {
+public class ClangCompiler {
+	public class CompilerResults {
+		public CompilerResults(ManilaFile objFile, bool success) {
 			this.objFile = objFile;
 			this.success = success;
 		}
@@ -34,16 +34,14 @@ internal class ClangCompiler {
 	internal ClangCompiler(string clangBinary) {
 	}
 
-	internal ManilaFile compileToObj(ManilaFile src, API.Clang.Flags flags, Project project, Workspace workspace) {
+	internal CompilerResults compile(API.Clang.Flags flags, Project project, Workspace workspace, ManilaFile src) {
 		var objFile = new ManilaFile(flags.objDir, src.getPathRelative(project.location.getPath())).setExtension("obj");
 		ManilaCPP.instance.debug("OBJFile:", objFile.getPath());
-
-		return objFile;
+		return new CompilerResults(objFile, true);
 	}
-	internal LinkerResults link(ManilaFile[] objFiles, API.Clang.Flags flags, Project project, Workspace workspace) {
+	internal LinkerResults link(API.Clang.Flags flags, Project project, Workspace workspace, ManilaFile[] objFiles) {
 		var binaryFile = new ManilaFile(flags.binDir, flags.name);
 		ManilaCPP.instance.debug("Binary File:", binaryFile.getPath());
-
 		return new LinkerResults(binaryFile);
 	}
 }

@@ -8,37 +8,21 @@ using Microsoft.ClearScript;
 namespace ManilaCPP.Clang.API;
 
 public static class Clang {
+	internal static readonly ClangCompiler clang = new ClangCompiler("clang");
+
 	public class Flags {
 		public string name { get; set; }
 		public ManilaDirectory objDir { get; set; }
 		public ManilaDirectory binDir { get; set; }
 		public ManilaFile[] files { get; set; }
 	}
-	public class Results {
-		public Results(ManilaFile binary) {
-			this.binary = binary;
-			success = true;
-		}
-
-		public readonly bool success;
-		public readonly ManilaFile binary;
-	}
 
 	internal static Flags flags() { return new Flags(); }
 
-	internal static Results compile(Flags flags, Project project, Workspace workspace) {
-		ManilaCPP.instance.info("Compiling", flags.name + "...");
-		ManilaCPP.instance.debug("BinDir:", flags.binDir.getPath());
-		ManilaCPP.instance.debug("ObjDir:", flags.objDir.getPath());
-
-		var clang = new ClangCompiler("clang");
-		foreach (var f in flags.files) {
-			ManilaCPP.instance.info(f.getFileName());
-			clang.compileToObj(f, flags, project, workspace);
-		}
-		var linkerResults = clang.link(null, flags, project, workspace);
-
-		var results = new Results(linkerResults.binary);
-		return results;
+	internal static ClangCompiler.CompilerResults compile(Flags flags, Project project, Workspace workspace, ManilaFile file) {
+		return clang.compile(flags, project, workspace, file);
+	}
+	internal static ClangCompiler.LinkerResults link(Flags flags, Project project, Workspace workspace, ManilaFile[] objFiles) {
+		return clang.link(flags, project, workspace, objFiles);
 	}
 }
