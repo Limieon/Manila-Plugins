@@ -8,13 +8,14 @@ using Microsoft.ClearScript;
 namespace ManilaCPP.Clang.API;
 
 public static class Clang {
-	internal static readonly ClangCompiler clang = new ClangCompiler("clang");
+	internal static readonly ClangCompiler clang = new ClangCompiler(@"clang++.exe");
 
 	public class Flags {
 		public string name { get; set; }
 		public ManilaDirectory objDir { get; set; }
 		public ManilaDirectory binDir { get; set; }
 		public ManilaFile[] files { get; set; }
+		public string platform { get; set; }
 	}
 
 	internal static Flags flags() { return new Flags(); }
