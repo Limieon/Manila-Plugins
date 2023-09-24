@@ -17,12 +17,12 @@ public class ManilaCPP : Plugin {
 		instance = this;
 	}
 
-	public readonly ClangStorage clangStorage = new ClangStorage();
+	public readonly ClangCompilerStorage clangCompilerStorage = new ClangCompilerStorage();
 
 	public override void init() {
 		base.init();
 
-		clangStorage.load(this);
+		clangCompilerStorage.load(this);
 
 		debug("Initializing...");
 
@@ -31,6 +31,7 @@ public class ManilaCPP : Plugin {
 		setBuildConfig(new ClangBuildConfig());
 	}
 	public override void shutdown() {
+		clangCompilerStorage.save(this);
 		base.shutdown();
 
 		debug("Shutting down...");

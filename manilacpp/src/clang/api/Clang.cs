@@ -1,9 +1,6 @@
 
 using Manila.Core;
-using Manila.Plugin.API;
 using Manila.Scripting.API;
-using Manila.Utils;
-using Microsoft.ClearScript;
 
 namespace ManilaCPP.Clang.API;
 
@@ -11,11 +8,26 @@ public static class Clang {
 	internal static readonly ClangCompiler clang = new ClangCompiler(@"clang++.exe");
 
 	public class Flags {
+		/// <summary>
+		/// The base output name of the binary
+		/// </summary>
 		public string name { get; set; }
+		/// <summary>
+		/// The directory containing the obj files
+		/// </summary>
 		public ManilaDirectory objDir { get; set; }
+		/// <summary>
+		/// The directory containing the binary files
+		/// </summary>
 		public ManilaDirectory binDir { get; set; }
-		public ManilaFile[] files { get; set; }
+		/// <summary>
+		/// The platform to compile for
+		/// </summary>
 		public string platform { get; set; }
+		/// <summary>
+		/// Forces compilation on every file
+		/// </summary>
+		public bool force { get; set; }
 	}
 
 	internal static Flags flags() { return new Flags(); }
