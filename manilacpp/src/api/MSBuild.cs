@@ -1,4 +1,5 @@
 
+using System.Diagnostics;
 using Manila.Core;
 using Manila.Scripting.API;
 using ManilaCPP.MSBuild;
@@ -14,7 +15,7 @@ public static class MSBuild {
 		public ManilaDirectory binDir;
 		public ManilaDirectory objDir;
 
-		public FileSet srcFiles;
+		public ManilaFile[] srcFiles;
 
 		public List<ManilaDirectory> includeDirs = new List<ManilaDirectory>();
 		public List<ManilaDirectory> libDirs = new List<ManilaDirectory>();
@@ -26,10 +27,10 @@ public static class MSBuild {
 		return new Flags();
 	}
 
-	public static void build(Workspace workspace, Project project, BuildConfig config, Flags flags) {
+	public static ManilaFile build(Workspace workspace, Project project, BuildConfig config, Flags flags) {
 		var prj = new ProjectFile(project, flags.objDir, flags.binDir);
 
-		prj.srcFiles.AddRange(flags.srcFiles.files());
+		prj.srcFiles.AddRange(flags.srcFiles);
 		prj.includeDirs.AddRange(flags.includeDirs);
 		prj.libDirs.AddRange(flags.libDirs);
 
@@ -51,8 +52,22 @@ public static class MSBuild {
 			plugin.debug($"  {f.getPath()}");
 		}
 
-		prj.generate();
+		prj.generate((CPPBuildConfig) config);
+
+		var dir = Directory.GetCurrentDirectory();
+		Directory.SetCurrentDirectory(project.location.getPath());
+
+		var i = new ProcessStartInfo("msbuild.exe");
+		i.Arguments = Compiler.arguments((CPPBuildConfig) config, flags);
+
+		var p = Process.Start(i);
+		p.WaitForExit();
+
+		ManilaCPP.instance.debug("Exiting Dir...");
+		Directory.SetCurrentDirectory(dir);
 
 		files.Add(prj);
+
+		return new ManilaFile(flags.binDir.getPath(), $"{project.name}.exe");
 	}
 }

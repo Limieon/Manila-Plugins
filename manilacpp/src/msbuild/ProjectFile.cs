@@ -2,6 +2,7 @@
 using Manila.Core;
 using Manila.Plugin.API;
 using Manila.Scripting.API;
+using ManilaCPP.API;
 
 namespace ManilaCPP.MSBuild;
 
@@ -31,18 +32,20 @@ public class ProjectFile {
 		platforms = new List<string>();
 	}
 
-	public void generate() {
+	public void generate(CPPBuildConfig config) {
 		List<string> lines = new List<string>();
+
+		var arch = MSBuild.Compiler.FromGeneric.architecture(config.arch);
 
 		lines.Add($"<Project DefaultTargets=\"Build\" ToolsVersion=\"16.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
 		lines.Add($"  <ItemGroup>");
-		lines.Add($"    <ProjectConfiguration Include=\"Debug|Win32\">");
+		lines.Add($"    <ProjectConfiguration Include=\"{config.config}|{arch}\">");
 		lines.Add($"      <Configuration>Debug</Configuration>");
-		lines.Add($"      <Platform>Win32</Platform>");
+		lines.Add($"      <Platform>{arch}</Platform>");
 		lines.Add($"    </ProjectConfiguration>");
 		lines.Add($"  </ItemGroup>");
 		lines.Add($"  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.default.props\" />");
-		lines.Add($"  <PropertyGroup Label=\"Configuration\" Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">");
+		lines.Add($"  <PropertyGroup Label=\"Configuration\" Condition=\"'$(Configuration)|$(Platform)'=='{config.config}|{arch}'\">");
 		lines.Add($"    <PreferredToolArchitecture>x64</PreferredToolArchitecture>");
 		lines.Add($"    <CharacterSet>Unicode</CharacterSet>");
 		lines.Add($"  </PropertyGroup>");
@@ -50,16 +53,16 @@ public class ProjectFile {
 		lines.Add($"    <ConfigurationType>Application</ConfigurationType>");
 		lines.Add($"    <PlatformToolset>v143</PlatformToolset>");
 		lines.Add($"  </PropertyGroup>");
-		lines.Add($"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">");
-		lines.Add($"    <OutDir>{binDir.getPath()}</OutDir>");
-		lines.Add($"    <IntDir>{objDir.getPath()}</IntDir>");
+		lines.Add($"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='{config.config}|{arch}'\">");
+		lines.Add($"    <OutDir>{binDir.getPath()}\\</OutDir>");
+		lines.Add($"    <IntDir>{objDir.getPath()}\\</IntDir>");
 		lines.Add($"    <TargetName>{project.name}</TargetName>");
 		lines.Add($"  </PropertyGroup>");
-		lines.Add($"  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">");
+		lines.Add($"  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='{config.config}|{arch}'\">");
 		lines.Add($"    <ClCompile>");
 		lines.Add($"      <LanguageStandard>stdcpp20</LanguageStandard>");
 		foreach (var d in includeDirs) {
-			lines.Add($"      <AdditionalIncludeDirectories>{d.getPath()}</AdditionalIncludeDirectories>");
+			lines.Add($"      <AdditionalIncludeDirectories>{d.getPath()}\\</AdditionalIncludeDirectories>");
 		}
 		lines.Add($"    </ClCompile>");
 		lines.Add($"  </ItemDefinitionGroup>");
