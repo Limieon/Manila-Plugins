@@ -1,8 +1,6 @@
 
 using Manila.Core;
-using Manila.Plugin.API;
 using Manila.Scripting.API;
-using ManilaCPP.API;
 
 namespace ManilaCPP.MSBuild;
 
@@ -34,14 +32,13 @@ public class ProjectFile {
 
 	public void generate(CPPBuildConfig config) {
 		List<string> lines = new List<string>();
-
-		var arch = MSBuild.Compiler.FromGeneric.architecture(config.arch);
+		string arch = Compiler.BuildConfigConverter.arch(config._arch);
 
 		lines.Add($"<Project DefaultTargets=\"Build\" ToolsVersion=\"16.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
 		lines.Add($"  <ItemGroup>");
 		lines.Add($"    <ProjectConfiguration Include=\"{config.config}|{arch}\">");
-		lines.Add($"      <Configuration>Debug</Configuration>");
-		lines.Add($"      <Platform>{arch}</Platform>");
+		lines.Add($"      <Configuration>{config.config}</Configuration>");
+		lines.Add($"      <Platform>{Compiler.FromGeneric.architecture(arch)}</Platform>");
 		lines.Add($"    </ProjectConfiguration>");
 		lines.Add($"  </ItemGroup>");
 		lines.Add($"  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.default.props\" />");

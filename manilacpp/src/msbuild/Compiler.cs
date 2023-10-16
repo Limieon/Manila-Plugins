@@ -28,8 +28,16 @@ public static class Compiler {
 		public static string config(string config) {
 			return "/property:Configuration=" + config;
 		}
-		public static string platform(string platform) {
-			return "/property:Platform=" + platform;
+		public static string platform(CPPBuildConfig.Arch arch) {
+			return "/property:Platform=" + BuildConfigConverter.arch(arch);
+		}
+	}
+	public static class BuildConfigConverter {
+		public static string arch(CPPBuildConfig.Arch arch) {
+			return
+				arch == CPPBuildConfig.Arch.X86 ? "Win32" :
+				arch == CPPBuildConfig.Arch.X64 ? "x64" : ""
+			;
 		}
 	}
 
@@ -37,6 +45,7 @@ public static class Compiler {
 		public static string architecture(string arch) {
 			switch (arch) {
 				case "x86": return "Win32";
+				case "Win32": return "Win32";
 				case "x64": return "x64";
 			}
 			return "";
@@ -49,7 +58,7 @@ public static class Compiler {
 			Arguments.detailedSummary(false),
 			Arguments.maxCpuCount(),
 			Arguments.config(config.config),
-			Arguments.platform(FromGeneric.architecture(config.arch)),
+			Arguments.platform(config._arch),
 			"-nologo"
 		});
 
