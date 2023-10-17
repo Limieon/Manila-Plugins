@@ -12,6 +12,10 @@ public static class MSBuild {
 	public static List<ProjectFile> files = new List<ProjectFile>();
 
 	public class Flags {
+		public enum BinaryType {
+			CONSOLE_APP, STATIC_LIB, DYNAMIC_LIB
+		}
+
 		public ManilaDirectory binDir;
 		public ManilaDirectory objDir;
 
@@ -20,12 +24,18 @@ public static class MSBuild {
 		public List<ManilaDirectory> includeDirs = new List<ManilaDirectory>();
 		public List<ManilaDirectory> libDirs = new List<ManilaDirectory>();
 
+		public BinaryType binaryType = BinaryType.CONSOLE_APP;
+
 		public bool debug = true;
 	}
 
 	public static Flags flags() {
 		return new Flags();
 	}
+
+	public static Flags.BinaryType consoleApp() { return Flags.BinaryType.CONSOLE_APP; }
+	public static Flags.BinaryType staticLib() { return Flags.BinaryType.STATIC_LIB; }
+	public static Flags.BinaryType dynamicLib() { return Flags.BinaryType.DYNAMIC_LIB; }
 
 	public static ManilaFile build(Workspace workspace, Project project, BuildConfig config, Flags flags) {
 		var prj = new ProjectFile(project, flags.objDir, flags.binDir);
@@ -52,7 +62,7 @@ public static class MSBuild {
 			plugin.debug($"  {f.getPath()}");
 		}
 
-		prj.generate((CPPBuildConfig) config);
+		prj.generate((CPPBuildConfig) config, flags);
 
 		var dir = Directory.GetCurrentDirectory();
 		Directory.SetCurrentDirectory(project.location.getPath());

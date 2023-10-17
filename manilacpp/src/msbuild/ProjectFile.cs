@@ -1,6 +1,7 @@
 
 using Manila.Core;
 using Manila.Scripting.API;
+using ManilaCPP.API;
 
 namespace ManilaCPP.MSBuild;
 
@@ -17,6 +18,13 @@ public class ProjectFile {
 	public List<string> configs;
 	public List<string> platforms;
 
+	private string configurationType(API.MSBuild.Flags.BinaryType type) {
+		return
+			type == API.MSBuild.Flags.BinaryType.CONSOLE_APP ? "Application" :
+			type == API.MSBuild.Flags.BinaryType.STATIC_LIB ? "StaticLibary" :
+			type == API.MSBuild.Flags.BinaryType.DYNAMIC_LIB ? "DynamicLibary" : "";
+	}
+
 	public ProjectFile(Project project, ManilaDirectory objDir, ManilaDirectory binDir) {
 		this.project = project;
 		this.objDir = objDir;
@@ -30,7 +38,7 @@ public class ProjectFile {
 		platforms = new List<string>();
 	}
 
-	public void generate(CPPBuildConfig config) {
+	public void generate(CPPBuildConfig config, API.MSBuild.Flags flags) {
 		List<string> lines = new List<string>();
 		string arch = Compiler.BuildConfigConverter.arch(config._arch);
 
@@ -47,7 +55,7 @@ public class ProjectFile {
 		lines.Add($"    <CharacterSet>Unicode</CharacterSet>");
 		lines.Add($"  </PropertyGroup>");
 		lines.Add($"  <PropertyGroup>");
-		lines.Add($"    <ConfigurationType>Application</ConfigurationType>");
+		lines.Add($"    <ConfigurationType>{configurationType(flags.binaryType)}</ConfigurationType>");
 		lines.Add($"    <PlatformToolset>v143</PlatformToolset>");
 		lines.Add($"  </PropertyGroup>");
 		lines.Add($"  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='{config.config}|{arch}'\">");
