@@ -1,7 +1,6 @@
 
 using Manila.Core;
 using Manila.Scripting.API;
-using ManilaCPP.API;
 
 namespace ManilaCPP.MSBuild;
 
@@ -77,6 +76,17 @@ public class ProjectFile {
 			lines.Add($"    <ClCompile Include=\"{f.getPath()}\" />");
 		}
 		lines.Add($"  </ItemGroup>");
+
+		lines.Add($"  <ItemGroup>");
+		foreach (var resolver in project.depndencyResolvers) {
+			var prj = resolver.resolve();
+
+			lines.Add($"    <ProjectReference Include=\"{Utils.getVCXProjFile(prj).getPathRelative(project.location)}\">");
+			lines.Add($"      <Project>{{{prj.uuid.ToString().ToUpper()}}}</Project>");
+			lines.Add($"    </ProjectReference>");
+		}
+		lines.Add($"  </ItemGroup>");
+
 		lines.Add($"  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Targets\" />");
 		lines.Add($"</Project>");
 		lines.Add($"");
