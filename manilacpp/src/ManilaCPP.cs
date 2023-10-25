@@ -1,5 +1,6 @@
 ﻿
 using Manila.Plugin.API;
+using ManilaCPP.Templates;
 
 namespace ManilaCPP;
 
@@ -13,13 +14,10 @@ public class ManilaCPP : Plugin {
 		setBuildConfig(new CPPBuildConfig());
 
 		addType(typeof(API.MSBuild));
+
+		addScriptTemplate(new TemplateApplication());
 	}
 	public override void shutdown() {
 		base.shutdown();
-
-		debug("Project Files:");
-		foreach (var f in API.MSBuild.files) {
-			debug(f.project.name);
-		}
 	}
 }
