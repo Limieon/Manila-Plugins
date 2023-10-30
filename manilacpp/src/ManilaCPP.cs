@@ -1,6 +1,5 @@
 ﻿
 using Manila.Plugin.API;
-using ManilaCPP.Templates;
 
 namespace ManilaCPP;
 
@@ -15,7 +14,7 @@ public class ManilaCPP : Plugin {
 
 		addType(typeof(API.MSBuild));
 
-		addScriptTemplate(new TemplateApplication());
+		addProjectConfigurator("application", new ApplicationProjectConfigurator());
 	}
 	public override void shutdown() {
 		base.shutdown();
