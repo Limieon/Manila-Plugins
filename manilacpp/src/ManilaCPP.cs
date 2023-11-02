@@ -1,5 +1,6 @@
 ﻿
 using Manila.Plugin.API;
+using ManilaCPP.Configurators;
 
 namespace ManilaCPP;
 
@@ -14,7 +15,7 @@ public class ManilaCPP : Plugin {
 
 		addType(typeof(API.MSBuild));
 
-		addProjectConfigurator("application", new ApplicationProjectConfigurator());
+		addProjectConfigurator("application", new AppProjectConfigurator());
 	}
 	public override void shutdown() {
 		base.shutdown();
