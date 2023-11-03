@@ -3,6 +3,7 @@ using Manila.Plugin.API;
 using Manila.Scripting.API;
 using Manila.Scripting.Exceptions;
 using Manila.Utils;
+using Manila.Core;
 using Microsoft.ClearScript;
 
 namespace ManilaCPP.Configurators;
@@ -73,18 +74,13 @@ public class CPPProjectConfigurator : ProjectConfigurator {
 	}
 
 	public override Dictionary<string, dynamic> getProperties() {
-		foreach (var e in _fileSets) {
-			ManilaCPP.instance.info($"Name: '{e.Key}'");
-			foreach (var f in e.Value) {
-				ManilaCPP.instance.info($"\t{f}");
-			}
-		}
-
 		if (_binDir == null) throw new NullReferenceException("Property binDir cannot be null!");
 		if (_objDir == null) throw new NullReferenceException("Property objDir cannot be null!");
 
 		var d = new Dictionary<string, dynamic> {
 			{ "fileSets", _fileSets },
+			{ "includeDirs", _includeDirs },
+			{ "libDirs", _libDirs },
 			{ "binDir", _binDir },
 			{ "objDir", _objDir },
 			{ "defines", _defines }

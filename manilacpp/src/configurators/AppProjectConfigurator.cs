@@ -22,12 +22,11 @@ public class AppProjectConfigurator : CPPProjectConfigurator {
 
 	public override Dictionary<string, dynamic> getProperties() {
 		if (_workingDir == null) throw new NullReferenceException("Property workingDir cannot be null!");
-		System.Console.WriteLine("Working Dir: " + _workingDir.getPath());
 
 		var d = new Dictionary<string, dynamic> {
-			{"workingDir", _workingDir}
+			{ "workingDir", _workingDir }
 		};
 
-		return DictUtils.merge<string, dynamic>(d, base.getProperties());
+		return DictUtils.merge(d, base.getProperties());
 	}
 }
