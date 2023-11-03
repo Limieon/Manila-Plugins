@@ -19,15 +19,28 @@ public class CPPProjectConfigurator : ProjectConfigurator {
 
 		_binDir = null;
 		_objDir = null;
+
+		_arch = null;
+
+		_systemversion = "latest";
+		_cppdialect = "C++17";
+		_cdialect = "C99";
 	}
 
-	internal Dictionary<string, List<ManilaFile>> _fileSets;
-	internal List<ManilaDirectory> _includeDirs;
-	internal List<ManilaDirectory> _libDirs;
-	internal List<string> _defines;
+	public Dictionary<string, List<ManilaFile>> _fileSets;
+	public List<ManilaDirectory> _includeDirs;
+	public List<ManilaDirectory> _libDirs;
+	public List<string> _defines;
 
-	internal ManilaDirectory? _binDir;
-	internal ManilaDirectory? _objDir;
+	public ManilaDirectory? _binDir;
+	public ManilaDirectory? _objDir;
+
+	public string? _arch;
+
+	public string _cppdialect = "C++17";
+	public string _cdialect = "C99";
+
+	public string _systemversion = "latest";
 
 	public void binDir(ManilaDirectory dir) {
 		_binDir = dir;
@@ -57,6 +70,21 @@ public class CPPProjectConfigurator : ProjectConfigurator {
 		_libDirs.AddRange(dirs);
 	}
 
+	public void arch(string v) {
+		_arch = v;
+	}
+
+	public void systemversion(string v) {
+		_systemversion = v;
+	}
+
+	public void cppdialect(string v) {
+		_cppdialect = v;
+	}
+	public void cdialect(string v) {
+		_cdialect = v;
+	}
+
 	public void fileSets(ScriptObject obj) {
 		foreach (var k in obj.PropertyNames) {
 			if (obj[k].GetType() != typeof(ManilaFile[])) throw new ScriptRuntimeException($"property in fileset '{k}' must be of type ManilaFile[]!");
@@ -73,19 +101,13 @@ public class CPPProjectConfigurator : ProjectConfigurator {
 		}
 	}
 
-	public override Dictionary<string, dynamic> getProperties() {
+	public override void check() {
 		if (_binDir == null) throw new NullReferenceException("Property binDir cannot be null!");
 		if (_objDir == null) throw new NullReferenceException("Property objDir cannot be null!");
+		if (_arch == null) throw new NullReferenceException("Property arch cannot be null!");
+	}
 
-		var d = new Dictionary<string, dynamic> {
-			{ "fileSets", _fileSets },
-			{ "includeDirs", _includeDirs },
-			{ "libDirs", _libDirs },
-			{ "binDir", _binDir },
-			{ "objDir", _objDir },
-			{ "defines", _defines }
-		};
-
-		return d;
+	public override Dictionary<string, dynamic> getProperties() {
+		return DictUtils.fromFields(this);
 	}
 }

@@ -14,19 +14,19 @@ public class AppProjectConfigurator : CPPProjectConfigurator {
 		_workingDir = null;
 	}
 
-	internal ManilaDirectory? _workingDir;
+	public ManilaDirectory? _workingDir;
 
 	public void workingDir(ManilaDirectory dir) {
 		_workingDir = dir;
 	}
 
-	public override Dictionary<string, dynamic> getProperties() {
+	public override void check() {
+		base.check();
+
 		if (_workingDir == null) throw new NullReferenceException("Property workingDir cannot be null!");
+	}
 
-		var d = new Dictionary<string, dynamic> {
-			{ "workingDir", _workingDir }
-		};
-
-		return DictUtils.merge(d, base.getProperties());
+	public override Dictionary<string, dynamic> getProperties() {
+		return DictUtils.fromFields(this);
 	}
 }
