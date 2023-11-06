@@ -13,8 +13,6 @@ public class ManilaCPP : Plugin {
 		base.init();
 		setBuildConfig(new CPPBuildConfig());
 
-		addType(typeof(API.MSBuild));
-
 		addProjectConfigurator("application", new AppProjectConfigurator());
 	}
 	public override void shutdown() {
