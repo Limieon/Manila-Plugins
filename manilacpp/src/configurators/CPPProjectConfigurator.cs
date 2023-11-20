@@ -8,7 +8,7 @@ using Microsoft.ClearScript;
 
 namespace ManilaCPP.Configurators;
 
-public class CPPProjectConfigurator : ProjectConfigurator {
+public abstract class CPPProjectConfigurator : ProjectConfigurator {
 	public CPPProjectConfigurator() { }
 
 	public override void init() {
@@ -109,5 +109,23 @@ public class CPPProjectConfigurator : ProjectConfigurator {
 
 	public override Dictionary<string, dynamic> getProperties() {
 		return DictUtils.fromFields(this);
+	}
+
+	// Functions
+	public override void generate(Workspace ws, string toolset) {
+		Logger.info($"Generating build files using '{toolset}'...");
+		foreach (var p in ws.projects) {
+			if (p.configurator.GetType() == typeof(AppProjectConfigurator)) {
+				System.Console.WriteLine($"Generating {p.name}...");
+			}
+		}
+	}
+	public override void build(Workspace ws, string toolset) {
+		Logger.info($"Building projects using '{toolset}'...");
+		foreach (var p in ws.projects) {
+			if (p.configurator.GetType() == typeof(AppProjectConfigurator)) {
+				System.Console.WriteLine($"Building {p.name}...");
+			}
+		}
 	}
 }
