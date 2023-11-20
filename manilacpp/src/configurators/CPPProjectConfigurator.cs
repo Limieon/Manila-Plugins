@@ -9,6 +9,8 @@ using Microsoft.ClearScript;
 namespace ManilaCPP.Configurators;
 
 public abstract class CPPProjectConfigurator : ProjectConfigurator {
+	private ManilaCPP plugin = ManilaCPP.instance;
+
 	public CPPProjectConfigurator() { }
 
 	public override void init() {
@@ -113,18 +115,18 @@ public abstract class CPPProjectConfigurator : ProjectConfigurator {
 
 	// Functions
 	public override void generate(Workspace ws, string toolset) {
-		Logger.info($"Generating build files using '{toolset}'...");
+		plugin.debug($"Generating build files using '{toolset}'...");
 		foreach (var p in ws.projects) {
 			if (p.configurator.GetType() == typeof(AppProjectConfigurator)) {
-				System.Console.WriteLine($"Generating {p.name}...");
+				plugin.debug($"Generating {p.name}...");
 			}
 		}
 	}
 	public override void build(Workspace ws, string toolset) {
-		Logger.info($"Building projects using '{toolset}'...");
+		plugin.debug($"Building projects using '{toolset}'...");
 		foreach (var p in ws.projects) {
 			if (p.configurator.GetType() == typeof(AppProjectConfigurator)) {
-				System.Console.WriteLine($"Building {p.name}...");
+				plugin.debug($"Building {p.name}...");
 			}
 		}
 	}
